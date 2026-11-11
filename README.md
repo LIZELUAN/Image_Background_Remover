@@ -10,17 +10,14 @@
 [点击这里打开在线工具](https://lizeluan.github.io/Image_Background_Remover/)
 
 ## 使用说明
-导入图片 
-
-默认移除白色背景，也可以按按钮，点击要移除的背景颜色区域
-
-拉动滑块，根据预览效果调整容差与羽化数值，确保边缘自然过渡，查看去除效果
-
-点击导出按钮保存透明背景 PNG 图片
 
 ### 简单示范
 <img src="./assets/Adobe%20Express%20-%20801578396.gif?raw=true" width="300" alt="使用教程动图">
 
 ### 拉动滑块
-<img src="./assetsImage_Background_Remover_pc_tutorial.gif?raw=true" width="700" alt="参数调节">
+<img src="./assetsImage_Background_Remover_pc_tutorial.gif?raw=true" alt="参数调节">
 
+1. 导入图片 
+2. 默认移除白色背景，也可以按按钮，点击要移除的背景颜色区域
+3. 拉动滑块，根据预览效果调整容差与羽化数值，查看去除后的效果
+4. 点击导出按钮保存透明背景 PNG 图片
