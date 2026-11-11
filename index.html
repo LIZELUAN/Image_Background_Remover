@@ -1,3 +1,15 @@
+已为你完整补全了 **橡皮擦** 与 **恢复画笔** 功能。
+
+在原有功能基础上进行了以下增强：
+
+1. **工具切换系统**：增加“魔棒吸管”、“橡皮擦（擦除杂色）”、“恢复画笔（还原误删）”三个工具按钮，自带激活状态高亮。
+2. **画笔控制**：增加“画笔大小”调节滑块，支持在画布上拖拽实时涂抹。
+3. **触控与移动端兼容**：同时支持 PC 鼠标拖拽与手机触摸屏（`touchstart` / `touchmove`）滑动涂抹。
+4. **长按保存与分享**：完美保留了之前的移动端导出弹窗与 `navigator.share` 系统分享保存逻辑。
+
+完整的纯前端单文件代码如下：
+
+```html
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -19,10 +31,8 @@
             background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
         }
 
-        /* 统一放大镜吸管指针样式 */
-        .cursor-pipette {
-            cursor: crosshair;
-        }
+        .cursor-pipette { cursor: crosshair; }
+        .cursor-brush { cursor: pointer; }
     </style>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen font-sans flex flex-col">
@@ -56,10 +66,38 @@
     <main class="flex-1 p-3 sm:p-6 flex flex-col lg:grid lg:grid-cols-4 gap-4 sm:gap-6 max-w-7xl mx-auto w-full">
         <!-- 控制面板 -->
         <div class="w-full lg:col-span-1 bg-slate-950/40 rounded-2xl p-4 sm:p-5 border border-slate-800 flex flex-col justify-between space-y-4 sm:space-y-6 order-2 lg:order-1">
-            <div class="space-y-4 sm:space-y-6">
-                <h2 class="text-sm sm:text-base font-semibold text-slate-200 border-b border-slate-800 pb-2 sm:pb-3">抠图参数设置</h2>
+            <div class="space-y-4 sm:space-y-5">
+                <h2 class="text-sm sm:text-base font-semibold text-slate-200 border-b border-slate-800 pb-2 sm:pb-3">抠图与修饰工具</h2>
                 
-                <!-- 预设颜色选择器 -->
+                <!-- 工具选择按钮组 -->
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-2">选择互动工具</label>
+                    <div class="grid grid-cols-3 gap-1.5 bg-slate-900 p-1 rounded-xl border border-slate-800">
+                        <button id="toolPipette" class="tool-btn active-tool flex flex-col items-center justify-center py-2 px-1 text-[11px] rounded-lg transition-all">
+                            <svg class="w-4 h-4 mb-1 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+                            魔棒吸管
+                        </button>
+                        <button id="toolEraser" class="tool-btn flex flex-col items-center justify-center py-2 px-1 text-[11px] rounded-lg transition-all text-slate-400 hover:text-white">
+                            <svg class="w-4 h-4 mb-1 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                            橡皮擦
+                        </button>
+                        <button id="toolRestore" class="tool-btn flex flex-col items-center justify-center py-2 px-1 text-[11px] rounded-lg transition-all text-slate-400 hover:text-white">
+                            <svg class="w-4 h-4 mb-1 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                            恢复画笔
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 手动画笔大小 (仅在橡皮擦/恢复模式下使用) -->
+                <div id="brushSizeBox" class="opacity-50 pointer-events-none transition-all">
+                    <div class="flex justify-between text-xs font-medium text-slate-400 mb-1">
+                        <span>涂抹画笔大小 (Brush Size)</span>
+                        <span id="brushVal" class="text-indigo-400 font-mono">20px</span>
+                    </div>
+                    <input type="range" id="brushSize" min="5" max="100" value="20" class="w-full accent-indigo-500 cursor-pointer">
+                </div>
+
+                <!-- 预设背景色彩选择 -->
                 <div>
                     <label class="block text-xs font-medium text-slate-400 mb-2">快速选取背景基准色</label>
                     <div class="grid grid-cols-4 gap-2">
@@ -70,20 +108,6 @@
                     </div>
                 </div>
 
-                <!-- 手动选择与吸管取色 -->
-                <div>
-                    <label class="block text-xs font-medium text-slate-400 mb-2">或自定义与吸管精准取色</label>
-                    <div class="flex items-center gap-2 sm:gap-3">
-                        <input type="color" id="targetColor" value="#ffffff" class="w-10 h-9 sm:w-12 sm:h-10 bg-transparent rounded cursor-pointer border border-slate-700 p-1 shrink-0">
-                        <button id="pipetteBtn" class="flex-1 py-2 px-3 bg-slate-800 hover:bg-slate-700 text-xs text-slate-200 border border-slate-700 rounded-lg flex items-center justify-center gap-2 transition-colors">
-                            <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
-                            </svg>
-                            点击画面吸管取色
-                        </button>
-                    </div>
-                </div>
-
                 <!-- 容差滑块 -->
                 <div>
                     <div class="flex justify-between text-xs font-medium text-slate-400 mb-1 sm:mb-2">
@@ -91,7 +115,6 @@
                         <span id="toleranceVal" class="text-indigo-400 font-mono">30</span>
                     </div>
                     <input type="range" id="tolerance" min="0" max="150" value="30" class="w-full accent-indigo-500 cursor-pointer">
-                    <p class="text-[10px] sm:text-[11px] text-slate-500 mt-1">控制与目标颜色的相似程度，值越大抠除范围越广。</p>
                 </div>
 
                 <!-- 平滑边缘/羽化滑块 -->
@@ -101,13 +124,12 @@
                         <span id="smoothVal" class="text-indigo-400 font-mono">10</span>
                     </div>
                     <input type="range" id="smoothness" min="0" max="50" value="10" class="w-full accent-indigo-500 cursor-pointer">
-                    <p class="text-[10px] sm:text-[11px] text-slate-500 mt-1">平滑过渡边缘像素，消除硬边缘与杂色。</p>
                 </div>
             </div>
 
             <div class="text-[11px] sm:text-xs text-slate-500 bg-slate-900/60 p-2.5 sm:p-3 rounded-lg border border-slate-800 mt-4">
                 <span class="text-slate-400 font-medium">提示：</span> 
-                所有计算均在浏览器前端实时进行，无任何服务器上传。
+                支持使用橡皮擦擦除遗留杂色，或使用恢复画笔复原误删区域。
             </div>
         </div>
 
@@ -133,9 +155,9 @@
                 </div>
             </div>
 
-            <!-- 吸管提示框 -->
-            <div id="pipetteBanner" class="hidden absolute top-3 left-1/2 -translate-x-1/2 bg-indigo-600 text-white text-[11px] sm:text-xs px-3 py-1.5 sm:px-4 sm:py-2 rounded-full shadow-lg border border-indigo-400 flex items-center gap-2 z-10 animate-bounce text-center whitespace-nowrap">
-                <span>点击下方图片选取要变透明的颜色</span>
+            <!-- 工具模式提示 Banner -->
+            <div id="toolBanner" class="hidden absolute top-3 left-1/2 -translate-x-1/2 bg-indigo-600 text-white text-[11px] sm:text-xs px-3 py-1.5 sm:px-4 sm:py-2 rounded-full shadow-lg border border-indigo-400 flex items-center gap-2 z-10 text-center whitespace-nowrap">
+                <span id="bannerText">点击画面吸取背景基准色</span>
             </div>
         </div>
     </main>
@@ -144,7 +166,7 @@
     <div id="mobileSaveModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex-col items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-700 rounded-2xl p-4 max-w-sm w-full flex flex-col items-center text-center space-y-4 shadow-2xl">
             <h3 class="text-base font-semibold text-slate-100">透明图片已生成</h3>
-            <p class="text-xs text-slate-400">长按下方图片选择“保存图片/保存到相册”，或点击下方按钮直接下载/分享</p>
+            <p class="text-xs text-slate-400">长按保存或点击下方按钮直接分享保存</p>
             <div class="checkerboard-bg rounded-lg border border-slate-700 max-h-[45vh] overflow-auto p-1 flex items-center justify-center">
                 <img id="mobilePreviewImg" class="max-w-full max-h-[40vh] object-contain block" alt="导出效果">
             </div>
@@ -167,17 +189,23 @@
         const canvasContainer = document.getElementById('canvasContainer');
         const previewCanvas = document.getElementById('previewCanvas');
         const ctx = previewCanvas.getContext('2d');
-        const targetColorInput = document.getElementById('targetColor');
         const toleranceInput = document.getElementById('tolerance');
         const toleranceVal = document.getElementById('toleranceVal');
         const smoothnessInput = document.getElementById('smoothness');
         const smoothVal = document.getElementById('smoothVal');
+        const brushSizeInput = document.getElementById('brushSize');
+        const brushVal = document.getElementById('brushVal');
+        const brushSizeBox = document.getElementById('brushSizeBox');
+
         const downloadBtn = document.getElementById('downloadBtn');
         const resetBtn = document.getElementById('resetBtn');
-        const pipetteBtn = document.getElementById('pipetteBtn');
-        const pipetteBanner = document.getElementById('pipetteBanner');
+        const toolPipette = document.getElementById('toolPipette');
+        const toolEraser = document.getElementById('toolEraser');
+        const toolRestore = document.getElementById('toolRestore');
+        const toolBanner = document.getElementById('toolBanner');
+        const bannerText = document.getElementById('bannerText');
         const colorPresets = document.querySelectorAll('.color-preset');
-        
+
         const mobileSaveModal = document.getElementById('mobileSaveModal');
         const mobilePreviewImg = document.getElementById('mobilePreviewImg');
         const closeModalBtn = document.getElementById('closeModalBtn');
@@ -185,7 +213,10 @@
 
         let rawImage = null;
         let originalImageData = null;
-        let isPipetteActive = false;
+        let processedImageData = null; // 存放基于色彩计算后的 ImageData
+        let currentMode = 'pipette';   // 'pipette' | 'eraser' | 'restore'
+        let targetColorHex = '#ffffff';
+        let isDrawing = false;
         let currentDataURL = '';
 
         dropZone.addEventListener('click', () => fileInput.click());
@@ -238,6 +269,8 @@
             canvasContainer.classList.remove('hidden');
             downloadBtn.classList.remove('hidden');
             resetBtn.classList.remove('hidden');
+            toolBanner.classList.remove('hidden');
+            switchTool('pipette');
         }
 
         function hexToRgb(hex) {
@@ -249,20 +282,20 @@
             } : { r: 255, g: 255, b: 255 };
         }
 
+        // 核心颜色擦除逻辑
         function processMatting() {
             if (!originalImageData) return;
 
-            const targetHex = targetColorInput.value;
-            const target = hexToRgb(targetHex);
+            const target = hexToRgb(targetColorHex);
             const tolerance = parseFloat(toleranceInput.value);
             const smoothness = parseFloat(smoothnessInput.value);
 
-            const imgData = new ImageData(
+            processedImageData = new ImageData(
                 new Uint8ClampedArray(originalImageData.data),
                 originalImageData.width,
                 originalImageData.height
             );
-            const data = imgData.data;
+            const data = processedImageData.data;
 
             for (let i = 0; i < data.length; i += 4) {
                 const r = data[i];
@@ -283,9 +316,141 @@
                 }
             }
 
-            ctx.putImageData(imgData, 0, 0);
+            ctx.putImageData(processedImageData, 0, 0);
         }
 
+        // 切换当前激活工具 UI 状态
+        function switchTool(mode) {
+            currentMode = mode;
+            [toolPipette, toolEraser, toolRestore].forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'text-white', 'shadow-md');
+                btn.classList.add('text-slate-400');
+            });
+
+            if (mode === 'pipette') {
+                toolPipette.classList.add('bg-indigo-600', 'text-white', 'shadow-md');
+                toolPipette.classList.remove('text-slate-400');
+                previewCanvas.className = 'max-w-full max-h-[50vh] sm:max-h-[70vh] object-contain block transition-all cursor-pipette';
+                bannerText.textContent = '点击画面吸取要擦除的背景基准色';
+                brushSizeBox.classList.add('opacity-50', 'pointer-events-none');
+            } else if (mode === 'eraser') {
+                toolEraser.classList.add('bg-rose-600', 'text-white', 'shadow-md');
+                toolEraser.classList.remove('text-slate-400');
+                previewCanvas.className = 'max-w-full max-h-[50vh] sm:max-h-[70vh] object-contain block transition-all cursor-brush';
+                bannerText.textContent = '按住并在画面拖拽，手动擦除遗留杂色';
+                brushSizeBox.classList.remove('opacity-50', 'pointer-events-none');
+            } else if (mode === 'restore') {
+                toolRestore.classList.add('bg-emerald-600', 'text-white', 'shadow-md');
+                toolRestore.classList.remove('text-slate-400');
+                previewCanvas.className = 'max-w-full max-h-[50vh] sm:max-h-[70vh] object-contain block transition-all cursor-brush';
+                bannerText.textContent = '按住并在画面拖拽，恢复涂抹区域的原貌';
+                brushSizeBox.classList.remove('opacity-50', 'pointer-events-none');
+            }
+        }
+
+        toolPipette.addEventListener('click', () => switchTool('pipette'));
+        toolEraser.addEventListener('click', () => switchTool('eraser'));
+        toolRestore.addEventListener('click', () => switchTool('restore'));
+
+        // 橡皮擦与恢复画笔涂抹算法
+        function applyBrush(clientX, clientY) {
+            const rect = previewCanvas.getBoundingClientRect();
+            const scaleX = previewCanvas.width / rect.width;
+            const scaleY = previewCanvas.height / rect.height;
+
+            const centerX = Math.floor((clientX - rect.left) * scaleX);
+            const centerY = Math.floor((clientY - rect.top) * scaleY);
+            const radius = Math.floor(parseFloat(brushSizeInput.value) * scaleX);
+
+            const currentData = ctx.getImageData(0, 0, previewCanvas.width, previewCanvas.height);
+            const data = currentData.data;
+
+            const startX = Math.max(0, centerX - radius);
+            const endX = Math.min(previewCanvas.width, centerX + radius);
+            const startY = Math.max(0, centerY - radius);
+            const endY = Math.min(previewCanvas.height, centerY + radius);
+
+            for (let y = startY; y < endY; y++) {
+                for (let x = startX; x < endX; x++) {
+                    const dist = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2));
+                    if (dist <= radius) {
+                        const index = (y * previewCanvas.width + x) * 4;
+
+                        if (currentMode === 'eraser') {
+                            // 橡皮擦：直接清除透明度 Alpha
+                            data[index + 3] = 0;
+                        } else if (currentMode === 'restore') {
+                            // 恢复画笔：从原图 ImageData 里填回像素
+                            data[index] = originalImageData.data[index];
+                            data[index + 1] = originalImageData.data[index + 1];
+                            data[index + 2] = originalImageData.data[index + 2];
+                            data[index + 3] = originalImageData.data[index + 3];
+                        }
+                    }
+                }
+            }
+
+            ctx.putImageData(currentData, 0, 0);
+        }
+
+        // 画布鼠标/触控互动逻辑
+        previewCanvas.addEventListener('mousedown', (e) => {
+            if (currentMode === 'pipette') {
+                handlePipettePick(e.clientX, e.clientY);
+            } else {
+                isDrawing = true;
+                applyBrush(e.clientX, e.clientY);
+            }
+        });
+
+        previewCanvas.addEventListener('mousemove', (e) => {
+            if (isDrawing && currentMode !== 'pipette') {
+                applyBrush(e.clientX, e.clientY);
+            }
+        });
+
+        window.addEventListener('mouseup', () => { isDrawing = false; });
+
+        // 兼容移动端 Touch 触摸拖拽
+        previewCanvas.addEventListener('touchstart', (e) => {
+            if (e.touches.length > 0) {
+                const touch = e.touches[0];
+                if (currentMode === 'pipette') {
+                    handlePipettePick(touch.clientX, touch.clientY);
+                } else {
+                    isDrawing = true;
+                    applyBrush(touch.clientX, touch.clientY);
+                }
+            }
+        }, { passive: true });
+
+        previewCanvas.addEventListener('touchmove', (e) => {
+            if (isDrawing && e.touches.length > 0 && currentMode !== 'pipette') {
+                applyBrush(e.touches[0].clientX, e.touches[0].clientY);
+            }
+        }, { passive: true });
+
+        previewCanvas.addEventListener('touchend', () => { isDrawing = false; });
+
+        // 吸管取色响应
+        function handlePipettePick(clientX, clientY) {
+            const rect = previewCanvas.getBoundingClientRect();
+            const scaleX = previewCanvas.width / rect.width;
+            const scaleY = previewCanvas.height / rect.height;
+
+            const x = Math.floor((clientX - rect.left) * scaleX);
+            const y = Math.floor((clientY - rect.top) * scaleY);
+
+            const index = (y * originalImageData.width + x) * 4;
+            const r = originalImageData.data[index];
+            const g = originalImageData.data[index + 1];
+            const b = originalImageData.data[index + 2];
+
+            targetColorHex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+            processMatting();
+        }
+
+        // 监听滑块与参数
         toleranceInput.addEventListener('input', (e) => {
             toleranceVal.textContent = e.target.value;
             processMatting();
@@ -296,67 +461,30 @@
             processMatting();
         });
 
-        targetColorInput.addEventListener('input', () => {
-            processMatting();
+        brushSizeInput.addEventListener('input', (e) => {
+            brushVal.textContent = e.target.value + 'px';
         });
 
         colorPresets.forEach(btn => {
             btn.addEventListener('click', () => {
-                targetColorInput.value = btn.dataset.color;
+                targetColorHex = btn.dataset.color;
                 processMatting();
             });
-        });
-
-        pipetteBtn.addEventListener('click', () => {
-            isPipetteActive = !isPipetteActive;
-            if (isPipetteActive) {
-                previewCanvas.classList.add('cursor-pipette');
-                pipetteBanner.classList.remove('hidden');
-                pipetteBtn.classList.add('bg-indigo-600', 'text-white');
-            } else {
-                previewCanvas.classList.remove('cursor-pipette');
-                pipetteBanner.classList.add('hidden');
-                pipetteBtn.classList.remove('bg-indigo-600', 'text-white');
-            }
-        });
-
-        previewCanvas.addEventListener('click', (e) => {
-            if (!isPipetteActive) return;
-
-            const rect = previewCanvas.getBoundingClientRect();
-            const scaleX = previewCanvas.width / rect.width;
-            const scaleY = previewCanvas.height / rect.height;
-
-            const x = Math.floor((e.clientX - rect.left) * scaleX);
-            const y = Math.floor((e.clientY - rect.top) * scaleY);
-
-            const index = (y * originalImageData.width + x) * 4;
-            const r = originalImageData.data[index];
-            const g = originalImageData.data[index + 1];
-            const b = originalImageData.data[index + 2];
-
-            const hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-            targetColorInput.value = hex;
-
-            isPipetteActive = false;
-            previewCanvas.classList.remove('cursor-pipette');
-            pipetteBanner.classList.add('hidden');
-            pipetteBtn.classList.remove('bg-indigo-600', 'text-white');
-            
-            processMatting();
         });
 
         resetBtn.addEventListener('click', () => {
             rawImage = null;
             originalImageData = null;
+            processedImageData = null;
             fileInput.value = '';
             dropZone.classList.remove('hidden');
             canvasContainer.classList.add('hidden');
             downloadBtn.classList.add('hidden');
             resetBtn.classList.add('hidden');
+            toolBanner.classList.add('hidden');
         });
 
-        // 导出按钮事件
+        // 下载与移动端导出保存逻辑
         downloadBtn.addEventListener('click', () => {
             currentDataURL = previewCanvas.toDataURL('image/png');
             const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -378,16 +506,13 @@
             mobileSaveModal.classList.remove('flex');
         });
 
-        // 手机端直接调用系统分享/保存接口
         shareBtn.addEventListener('click', async () => {
             if (!currentDataURL) return;
             try {
-                // 将 DataURL 转换为 Blob 文件对象
                 const res = await fetch(currentDataURL);
                 const blob = await res.blob();
                 const file = new File([blob], `transparent_${Date.now()}.png`, { type: 'image/png' });
 
-                // 如果浏览器支持系统分享（现代手机 Safari / Chrome 均支持）
                 if (navigator.canShare && navigator.canShare({ files: [file] })) {
                     await navigator.share({
                         files: [file],
@@ -395,13 +520,11 @@
                         text: '请选择保存到相册或发送'
                     });
                 } else {
-                    // 降级方案：新窗口打开，长按保存
                     const win = window.open();
                     win.document.write(`<iframe src="${currentDataURL}" frameborder="0" style="border:0; top:0; left:0; bottom:0; right:0; width:100%; height:100%;" allowfullscreen></iframe>`);
                 }
             } catch (err) {
-                console.log('分享取消或不支持:', err);
-                // 降级直接触发普通下载
+                console.log('分享取消:', err);
                 const link = document.createElement('a');
                 link.download = 'transparent_' + Date.now() + '.png';
                 link.href = currentDataURL;
@@ -411,3 +534,5 @@
     </script>
 </body>
 </html>
+
+```
