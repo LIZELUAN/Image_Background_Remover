@@ -15,7 +15,7 @@
 <img src="./assets/Adobe%20Express%20-%20801578396.gif?raw=true" width="300" alt="使用教程动图">
 
 ### 拉动滑块
-<img src="./assetsImage_Background_Remover_pc_tutorial.gif?raw=true" alt="参数调节">
+<img src="https://github.com/LIZELUAN/Image_Background_Remover/blob/main/assets/Image_Background_Remover_pc_tutorial.gif?raw=true" alt="参数调节">
 
 1. 导入图片 
 2. 默认移除白色背景，也可以按按钮，点击要移除的背景颜色区域
