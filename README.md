@@ -18,6 +18,6 @@
 <img src="https://github.com/LIZELUAN/Image_Background_Remover/blob/main/assets/Image_Background_Remover_pc_tutorial.gif?raw=true" alt="参数调节">
 
 1. 导入图片 
-2. 默认移除白色背景，也可以先点击`点击画面开始吸色`按钮，然后点击要移除的背景颜色区域
+2. 默认移除白色背景，也可以先点击`点击画面吸管取色`按钮，然后点击要移除的背景颜色区域
 3. 拉动滑块，根据预览效果调整容差与羽化数值，查看去除后的效果
 4. 点击导出PNG按钮, 保存透明背景图片
