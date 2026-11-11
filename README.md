@@ -1,0 +1,2 @@
+# Image_Background_Remover
+轻量级单文件本地抠图与透明背景导出工具
