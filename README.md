@@ -1,18 +1,14 @@
 # Image Background Remover (本地抠图与透明背景导出工具)
 
 一个轻量本地抠图与透明背景导出工具。
----
 
 ## 核心功能
-
 * **背景擦除与透明导出**：支持采样色彩识别与范围擦除，一键导出包含 Alpha 透明通道的 PNG 图像。
 * **实时参数微调**：提供容差（Tolerance）、边缘羽化（Feathering）及平滑度调整，即时预览抠图效果。
 * **像素级精修工具**：内置橡皮擦与恢复画笔，支持自定义画笔尺寸以进行细节边缘修正。
 
----
-
 ## 快速访问
-👉 [点击这里打开在线工具](https://lizeluan.github.io/Image_Background_Remover/)
+[点击这里打开在线工具](https://lizeluan.github.io/Image_Background_Remover/)
 
 ## 使用说明
 
