@@ -12,7 +12,7 @@
 ## 使用说明
 <img src="./assets/Adobe%20Express%20-%20801578396.gif?raw=true" width="300" alt="使用教程动图">
 
-<img src=https://new.express.adobe.com/publishedV2/urn:aaid:sc:AP:f9c8c689-782e-5bbb-ad25-e9bb9722109c?promoid=Y69SGM5H&sdid=C4SZ2FYJ&mv=other" width="700" alt="使用教程动图">
+<img src=./assets/Adobe%20Express%20-%Image_Background_Remover_pc_tutorial.gif?raw=true" width="700" alt="使用教程动图">
 
 
 1. 载入图片：将待处理图片拖拽至页面指定区域，或点击上传框选择文件。
