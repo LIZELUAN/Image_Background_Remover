@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>透明背景抠图与导出工具</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -15,8 +15,8 @@
                 linear-gradient(-45deg, #e2e8f0 25%, transparent 25%), 
                 linear-gradient(45deg, transparent 75%, #e2e8f0 75%), 
                 linear-gradient(-45deg, transparent 75%, #e2e8f0 75%);
-            background-size: 20px 20px;
-            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            background-size: 16px 16px;
+            background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
         }
 
         /* 统一放大镜吸管指针样式 */
@@ -27,54 +27,54 @@
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen font-sans flex flex-col">
     <!-- 头部导航栏 -->
-    <header class="border-b border-slate-800 bg-slate-950/60 backdrop-blur-md sticky top-0 z-50 px-6 py-4 flex items-center justify-between">
-        <div class="flex items-center space-x-3">
-            <div class="p-2 bg-indigo-600 rounded-lg shadow-lg shadow-indigo-500/30">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur-md sticky top-0 z-40 px-4 sm:px-6 py-3 flex items-center justify-between">
+        <div class="flex items-center space-x-2 sm:space-x-3">
+            <div class="p-2 bg-indigo-600 rounded-lg shadow-lg shadow-indigo-500/30 shrink-0">
+                <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
                 </svg>
             </div>
             <div>
-                <h1 class="text-xl font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">纯浏览器透明抠图工具</h1>
-                <p class="text-xs text-slate-400">纯前端网页运算 · 零服务器上传 · 真正的 PNG 透明通道导出</p>
+                <h1 class="text-base sm:text-xl font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent leading-tight">纯浏览器透明抠图工具</h1>
+                <p class="text-[10px] sm:text-xs text-slate-400 hidden sm:block">纯前端网页运算 · 零服务器上传 · 真正的 PNG 透明通道导出</p>
             </div>
         </div>
-        <div class="flex items-center space-x-3">
-            <button id="resetBtn" class="hidden px-4 py-2 text-sm bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg transition-colors border border-slate-700">
-                重置图片
+        <div class="flex items-center space-x-2">
+            <button id="resetBtn" class="hidden px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg transition-colors border border-slate-700">
+                重置
             </button>
-            <button id="downloadBtn" class="hidden px-5 py-2 text-sm bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg transition-all shadow-lg shadow-indigo-600/30 font-medium flex items-center gap-2">
+            <button id="downloadBtn" class="hidden px-3 py-1.5 sm:px-5 sm:py-2 text-xs sm:text-sm bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg transition-all shadow-lg shadow-indigo-600/30 font-medium flex items-center gap-1 sm:gap-2 shrink-0">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                 </svg>
-                导出透明 PNG
+                <span>导出 PNG</span>
             </button>
         </div>
     </header>
 
-    <!-- 主主体区域 -->
-    <main class="flex-1 p-6 grid grid-cols-1 lg:grid-cols-4 gap-6 max-w-7xl mx-auto w-full">
-        <!-- 左侧控制面板 -->
-        <div class="lg:col-span-1 bg-slate-950/40 rounded-2xl p-5 border border-slate-800 flex flex-col justify-between space-y-6 h-fit">
-            <div class="space-y-6">
-                <h2 class="text-base font-semibold text-slate-200 border-b border-slate-800 pb-3">抠图参数设置</h2>
+    <!-- 主体区域 -->
+    <main class="flex-1 p-3 sm:p-6 flex flex-col lg:grid lg:grid-cols-4 gap-4 sm:gap-6 max-w-7xl mx-auto w-full">
+        <!-- 控制面板 -->
+        <div class="w-full lg:col-span-1 bg-slate-950/40 rounded-2xl p-4 sm:p-5 border border-slate-800 flex flex-col justify-between space-y-4 sm:space-y-6 order-2 lg:order-1">
+            <div class="space-y-4 sm:space-y-6">
+                <h2 class="text-sm sm:text-base font-semibold text-slate-200 border-b border-slate-800 pb-2 sm:pb-3">抠图参数设置</h2>
                 
                 <!-- 预设颜色选择器 -->
                 <div>
                     <label class="block text-xs font-medium text-slate-400 mb-2">快速选取背景基准色</label>
                     <div class="grid grid-cols-4 gap-2">
-                        <button class="color-preset h-9 rounded-md border border-slate-700 bg-white shadow-inner focus:ring-2 focus:ring-indigo-500 transition-all" data-color="#ffffff" title="白色"></button>
-                        <button class="color-preset h-9 rounded-md border border-slate-700 bg-black shadow-inner focus:ring-2 focus:ring-indigo-500 transition-all" data-color="#000000" title="黑色"></button>
-                        <button class="color-preset h-9 rounded-md border border-slate-700 bg-green-500 shadow-inner focus:ring-2 focus:ring-indigo-500 transition-all" data-color="#00ff00" title="绿幕"></button>
-                        <button class="color-preset h-9 rounded-md border border-slate-700 bg-blue-500 shadow-inner focus:ring-2 focus:ring-indigo-500 transition-all" data-color="#0000ff" title="蓝幕"></button>
+                        <button class="color-preset h-8 sm:h-9 rounded-md border border-slate-700 bg-white shadow-inner focus:ring-2 focus:ring-indigo-500 transition-all" data-color="#ffffff" title="白色"></button>
+                        <button class="color-preset h-8 sm:h-9 rounded-md border border-slate-700 bg-black shadow-inner focus:ring-2 focus:ring-indigo-500 transition-all" data-color="#000000" title="黑色"></button>
+                        <button class="color-preset h-8 sm:h-9 rounded-md border border-slate-700 bg-green-500 shadow-inner focus:ring-2 focus:ring-indigo-500 transition-all" data-color="#00ff00" title="绿幕"></button>
+                        <button class="color-preset h-8 sm:h-9 rounded-md border border-slate-700 bg-blue-500 shadow-inner focus:ring-2 focus:ring-indigo-500 transition-all" data-color="#0000ff" title="蓝幕"></button>
                     </div>
                 </div>
 
                 <!-- 手动选择与吸管取色 -->
                 <div>
                     <label class="block text-xs font-medium text-slate-400 mb-2">或自定义与吸管精准取色</label>
-                    <div class="flex items-center gap-3">
-                        <input type="color" id="targetColor" value="#ffffff" class="w-12 h-10 bg-transparent rounded cursor-pointer border border-slate-700 p-1">
+                    <div class="flex items-center gap-2 sm:gap-3">
+                        <input type="color" id="targetColor" value="#ffffff" class="w-10 h-9 sm:w-12 sm:h-10 bg-transparent rounded cursor-pointer border border-slate-700 p-1 shrink-0">
                         <button id="pipetteBtn" class="flex-1 py-2 px-3 bg-slate-800 hover:bg-slate-700 text-xs text-slate-200 border border-slate-700 rounded-lg flex items-center justify-center gap-2 transition-colors">
                             <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
@@ -86,63 +86,82 @@
 
                 <!-- 容差滑块 -->
                 <div>
-                    <div class="flex justify-between text-xs font-medium text-slate-400 mb-2">
+                    <div class="flex justify-between text-xs font-medium text-slate-400 mb-1 sm:mb-2">
                         <span>容差阈值 (Tolerance)</span>
                         <span id="toleranceVal" class="text-indigo-400 font-mono">30</span>
                     </div>
                     <input type="range" id="tolerance" min="0" max="150" value="30" class="w-full accent-indigo-500 cursor-pointer">
-                    <p class="text-[11px] text-slate-500 mt-1">控制与目标颜色的相似程度，值越大抠除的颜色范围越广。</p>
+                    <p class="text-[10px] sm:text-[11px] text-slate-500 mt-1">控制与目标颜色的相似程度，值越大抠除范围越广。</p>
                 </div>
 
                 <!-- 平滑边缘/羽化滑块 -->
                 <div>
-                    <div class="flex justify-between text-xs font-medium text-slate-400 mb-2">
+                    <div class="flex justify-between text-xs font-medium text-slate-400 mb-1 sm:mb-2">
                         <span>边缘平滑度 (Smoothness)</span>
                         <span id="smoothVal" class="text-indigo-400 font-mono">10</span>
                     </div>
                     <input type="range" id="smoothness" min="0" max="50" value="10" class="w-full accent-indigo-500 cursor-pointer">
-                    <p class="text-[11px] text-slate-500 mt-1">平滑过渡边缘像素，减少锯齿感与杂色边框线。</p>
+                    <p class="text-[10px] sm:text-[11px] text-slate-500 mt-1">平滑过渡边缘像素，消除硬边缘与杂色。</p>
                 </div>
             </div>
 
-            <div class="text-xs text-slate-500 bg-slate-900/60 p-3 rounded-lg border border-slate-800">
+            <div class="text-[11px] sm:text-xs text-slate-500 bg-slate-900/60 p-2.5 sm:p-3 rounded-lg border border-slate-800 mt-4">
                 <span class="text-slate-400 font-medium">提示：</span> 
-                所有操作在网页前端 Canvas 中实时计算并渲染，图片绝不会上传到任何后端服务器，充分保障数据隐私与加载速度。
+                所有计算均在浏览器前端实时进行，无任何服务器上传。
             </div>
         </div>
 
-        <!-- 右侧画布与预览区 -->
-        <div class="lg:col-span-3 flex flex-col items-center justify-center min-h-[500px] border border-dashed border-slate-800 rounded-2xl bg-slate-950/20 relative overflow-hidden p-4">
+        <!-- 画布与预览区 -->
+        <div class="w-full lg:col-span-3 flex flex-col items-center justify-center min-h-[300px] sm:min-h-[500px] border border-dashed border-slate-800 rounded-2xl bg-slate-950/20 relative overflow-hidden p-2 sm:p-4 order-1 lg:order-2">
             
-            <!-- 未上传图片时的拖拽上传提示框 -->
-            <div id="dropZone" class="flex flex-col items-center justify-center w-full h-full min-h-[400px] cursor-pointer hover:border-indigo-500/50 hover:bg-slate-900/30 rounded-xl transition-all">
+            <!-- 上传提示框 -->
+            <div id="dropZone" class="flex flex-col items-center justify-center w-full h-full min-h-[250px] sm:min-h-[400px] cursor-pointer hover:border-indigo-500/50 hover:bg-slate-900/30 rounded-xl transition-all p-4 text-center">
                 <input type="file" id="fileInput" accept="image/*" class="hidden">
-                <div class="p-4 bg-slate-900 rounded-full border border-slate-800 text-indigo-400 mb-4 shadow-xl">
-                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="p-3 sm:p-4 bg-slate-900 rounded-full border border-slate-800 text-indigo-400 mb-3 sm:mb-4 shadow-xl">
+                    <svg class="w-8 h-8 sm:w-10 sm:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                     </svg>
                 </div>
-                <h3 class="text-lg font-medium text-slate-200">点击或将图片拖拽至此处</h3>
-                <p class="text-sm text-slate-500 mt-1">支持 PNG, JPG, WEBP 等常见格式</p>
+                <h3 class="text-base sm:text-lg font-medium text-slate-200">点击选择或拖拽图片</h3>
+                <p class="text-xs sm:text-sm text-slate-500 mt-1">支持手机相册选择、PNG, JPG, WEBP 等格式</p>
             </div>
 
-            <!-- 图像画布与预览区 (隐藏/显示) -->
-            <div id="canvasContainer" class="hidden relative w-full h-full flex items-center justify-center overflow-auto max-h-[75vh] p-2">
-                <div class="relative checkerboard-bg rounded-xl shadow-2xl border border-slate-700/50 overflow-hidden">
-                    <canvas id="previewCanvas" class="max-w-full max-h-[70vh] object-contain block transition-all"></canvas>
+            <!-- 图像画布区 -->
+            <div id="canvasContainer" class="hidden relative w-full h-full flex items-center justify-center overflow-auto max-h-[55vh] sm:max-h-[75vh] p-1">
+                <div class="relative checkerboard-bg rounded-xl shadow-2xl border border-slate-700/50 overflow-hidden flex items-center justify-center">
+                    <canvas id="previewCanvas" class="max-w-full max-h-[50vh] sm:max-h-[70vh] object-contain block transition-all"></canvas>
                 </div>
             </div>
 
             <!-- 吸管提示框 -->
-            <div id="pipetteBanner" class="hidden absolute top-4 left-1/2 -translate-x-1/2 bg-indigo-600 text-white text-xs px-4 py-2 rounded-full shadow-lg border border-indigo-400 flex items-center gap-2 z-10 animate-bounce">
-                <span>请在上方图像中点击你想要擦除变透明的颜色区域</span>
+            <div id="pipetteBanner" class="hidden absolute top-3 left-1/2 -translate-x-1/2 bg-indigo-600 text-white text-[11px] sm:text-xs px-3 py-1.5 sm:px-4 sm:py-2 rounded-full shadow-lg border border-indigo-400 flex items-center gap-2 z-10 animate-bounce text-center whitespace-nowrap">
+                <span>点击下方图片选取要变透明的颜色</span>
             </div>
         </div>
     </main>
 
-    <!-- JavaScript 交互与 Canvas 计算逻辑 -->
+    <!-- 手机端保存弹窗 modal -->
+    <div id="mobileSaveModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex-col items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-4 max-w-sm w-full flex flex-col items-center text-center space-y-4 shadow-2xl">
+            <h3 class="text-base font-semibold text-slate-100">透明图片已生成</h3>
+            <p class="text-xs text-slate-400">长按下方图片选择“保存图片/保存到相册”，或点击下方按钮直接下载/分享</p>
+            <div class="checkerboard-bg rounded-lg border border-slate-700 max-h-[45vh] overflow-auto p-1 flex items-center justify-center">
+                <img id="mobilePreviewImg" class="max-w-full max-h-[40vh] object-contain block" alt="导出效果">
+            </div>
+            <div class="flex gap-2 w-full">
+                <button id="shareBtn" class="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs rounded-xl font-medium shadow-md shadow-indigo-600/30 flex items-center justify-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+                    直接保存/分享
+                </button>
+                <button id="closeModalBtn" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs rounded-xl font-medium border border-slate-700">
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript 逻辑 -->
     <script>
-        // 获取 DOM 节点
         const fileInput = document.getElementById('fileInput');
         const dropZone = document.getElementById('dropZone');
         const canvasContainer = document.getElementById('canvasContainer');
@@ -158,12 +177,17 @@
         const pipetteBtn = document.getElementById('pipetteBtn');
         const pipetteBanner = document.getElementById('pipetteBanner');
         const colorPresets = document.querySelectorAll('.color-preset');
+        
+        const mobileSaveModal = document.getElementById('mobileSaveModal');
+        const mobilePreviewImg = document.getElementById('mobilePreviewImg');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const shareBtn = document.getElementById('shareBtn');
 
         let rawImage = null;
         let originalImageData = null;
         let isPipetteActive = false;
+        let currentDataURL = '';
 
-        // 绑定拖拽上传事件
         dropZone.addEventListener('click', () => fileInput.click());
         dropZone.addEventListener('dragover', (e) => {
             e.preventDefault();
@@ -186,7 +210,6 @@
             }
         });
 
-        // 读取图片文件
         function handleFile(file) {
             if (!file.type.match('image.*')) return;
             const reader = new FileReader();
@@ -203,7 +226,6 @@
             reader.readAsDataURL(file);
         }
 
-        // 初始化 Canvas 尺寸与原始图像数据
         function initCanvas() {
             previewCanvas.width = rawImage.width;
             previewCanvas.height = rawImage.height;
@@ -211,7 +233,6 @@
             originalImageData = ctx.getImageData(0, 0, rawImage.width, rawImage.height);
         }
 
-        // 切换 UI 状态为已加载
         function showUI() {
             dropZone.classList.add('hidden');
             canvasContainer.classList.remove('hidden');
@@ -219,7 +240,6 @@
             resetBtn.classList.remove('hidden');
         }
 
-        // 转换为 RGB 结构
         function hexToRgb(hex) {
             const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
             return result ? {
@@ -229,7 +249,6 @@
             } : { r: 255, g: 255, b: 255 };
         }
 
-        // 核心抠图算法：遍历像素点并将目标颜色范围内变为透明 alpha=0
         function processMatting() {
             if (!originalImageData) return;
 
@@ -238,7 +257,6 @@
             const tolerance = parseFloat(toleranceInput.value);
             const smoothness = parseFloat(smoothnessInput.value);
 
-            // 创建新的 ImageData 副本
             const imgData = new ImageData(
                 new Uint8ClampedArray(originalImageData.data),
                 originalImageData.width,
@@ -251,7 +269,6 @@
                 const g = data[i + 1];
                 const b = data[i + 2];
 
-                // 欧式距离计算色彩差异
                 const distance = Math.sqrt(
                     Math.pow(r - target.r, 2) +
                     Math.pow(g - target.g, 2) +
@@ -259,26 +276,22 @@
                 );
 
                 if (distance <= tolerance) {
-                    // 彻底透明
                     data[i + 3] = 0;
                 } else if (distance < tolerance + smoothness && smoothness > 0) {
-                    // 渐变羽化过渡，消除硬边缘
                     const alphaRatio = (distance - tolerance) / smoothness;
                     data[i + 3] = Math.round(data[i + 3] * alphaRatio);
                 }
             }
 
-            // 重新绘制回 Canvas
             ctx.putImageData(imgData, 0, 0);
         }
 
-        // 参数控制事件监听
         toleranceInput.addEventListener('input', (e) => {
             toleranceVal.textContent = e.target.value;
             processMatting();
         });
 
-    smoothnessInput.addEventListener('input', (e) => {
+        smoothnessInput.addEventListener('input', (e) => {
             smoothVal.textContent = e.target.value;
             processMatting();
         });
@@ -287,7 +300,6 @@
             processMatting();
         });
 
-        // 预设按钮事件
         colorPresets.forEach(btn => {
             btn.addEventListener('click', () => {
                 targetColorInput.value = btn.dataset.color;
@@ -295,7 +307,6 @@
             });
         });
 
-        // 吸管模式开关
         pipetteBtn.addEventListener('click', () => {
             isPipetteActive = !isPipetteActive;
             if (isPipetteActive) {
@@ -309,7 +320,6 @@
             }
         });
 
-        // 画布点击吸管取色
         previewCanvas.addEventListener('click', (e) => {
             if (!isPipetteActive) return;
 
@@ -320,17 +330,14 @@
             const x = Math.floor((e.clientX - rect.left) * scaleX);
             const y = Math.floor((e.clientY - rect.top) * scaleY);
 
-            // 从原始 ImageData 准确提取颜色
             const index = (y * originalImageData.width + x) * 4;
             const r = originalImageData.data[index];
             const g = originalImageData.data[index + 1];
             const b = originalImageData.data[index + 2];
 
-            // 转换成 HEX 并赋值
             const hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
             targetColorInput.value = hex;
 
-            // 关闭吸管状态并重新抠图
             isPipetteActive = false;
             previewCanvas.classList.remove('cursor-pipette');
             pipetteBanner.classList.add('hidden');
@@ -339,7 +346,6 @@
             processMatting();
         });
 
-        // 重置按钮
         resetBtn.addEventListener('click', () => {
             rawImage = null;
             originalImageData = null;
@@ -350,13 +356,57 @@
             resetBtn.classList.add('hidden');
         });
 
-        // 下载真正的透明 PNG
+        // 导出按钮事件
         downloadBtn.addEventListener('click', () => {
-            const dataURL = previewCanvas.toDataURL('image/png');
-            const link = document.createElement('a');
-            link.download = 'transparent_output_' + Date.now() + '.png';
-            link.href = dataURL;
-            link.click();
+            currentDataURL = previewCanvas.toDataURL('image/png');
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+            if (isMobile) {
+                mobilePreviewImg.src = currentDataURL;
+                mobileSaveModal.classList.remove('hidden');
+                mobileSaveModal.classList.add('flex');
+            } else {
+                const link = document.createElement('a');
+                link.download = 'transparent_output_' + Date.now() + '.png';
+                link.href = currentDataURL;
+                link.click();
+            }
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            mobileSaveModal.classList.add('hidden');
+            mobileSaveModal.classList.remove('flex');
+        });
+
+        // 手机端直接调用系统分享/保存接口
+        shareBtn.addEventListener('click', async () => {
+            if (!currentDataURL) return;
+            try {
+                // 将 DataURL 转换为 Blob 文件对象
+                const res = await fetch(currentDataURL);
+                const blob = await res.blob();
+                const file = new File([blob], `transparent_${Date.now()}.png`, { type: 'image/png' });
+
+                // 如果浏览器支持系统分享（现代手机 Safari / Chrome 均支持）
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    await navigator.share({
+                        files: [file],
+                        title: '透明抠图结果',
+                        text: '请选择保存到相册或发送'
+                    });
+                } else {
+                    // 降级方案：新窗口打开，长按保存
+                    const win = window.open();
+                    win.document.write(`<iframe src="${currentDataURL}" frameborder="0" style="border:0; top:0; left:0; bottom:0; right:0; width:100%; height:100%;" allowfullscreen></iframe>`);
+                }
+            } catch (err) {
+                console.log('分享取消或不支持:', err);
+                // 降级直接触发普通下载
+                const link = document.createElement('a');
+                link.download = 'transparent_' + Date.now() + '.png';
+                link.href = currentDataURL;
+                link.click();
+            }
         });
     </script>
 </body>
