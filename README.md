@@ -11,7 +11,7 @@
 [点击这里打开在线工具](https://lizeluan.github.io/Image_Background_Remover/)
 
 ## 使用说明
-<img src="./assets/Adobe Express - 801578396.gif" width="592" alt="使用教程动图">
+<img src="./assets/Adobe%20Express%20-%20801578396.gif?raw=true" width="300" alt="使用教程动图">
 1. 载入图片：将待处理图片拖拽至页面指定区域，或点击上传框选择文件。
 2. 选取背景：使用吸管工具点击想要移除的背景颜色区域。
 3. 参数调节：根据预览效果调整容差与羽化数值，确保边缘自然过渡。
